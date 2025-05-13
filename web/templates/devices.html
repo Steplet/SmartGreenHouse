@@ -1,0 +1,11 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {{range .}}
+    <div class="bg-white shadow-md rounded-lg p-4">
+
+        <a href="devices/{{.FriendlyName}}"><h2 class="text-xl font-semibold mb-2">{{.FriendlyName}}</h2></a>
+        <p><span class="font-semibold">Model:</span> {{.ModelID}}</p>
+        <p><span class="font-semibold">Type:</span> {{.Type}}</p>
+        <p><span class="font-semibold">IEEE:</span> <code class="text-sm text-gray-600">{{.IEEEAddress}}</code></p>
+    </div>
+    {{end}}
+</div>

@@ -1,0 +1,21 @@
+<ul class="space-y-4">
+    <!-- Один сценарий -->
+    {{range .}}
+    <li id="card-{{.ID}}" class="p-4 bg-gray-50 border rounded shadow-sm flex justify-between items-start">
+        <div>
+            <p><strong>{{.IEEENameInitDevice}}</strong> — если <code>{{.ExposesProperty}} {{.Operator}} {{.ExposesValue}}</code></p>
+            <p class="text-sm text-gray-600">→ отправить {{.ActionPayload}} на <strong>{{.PublishTopic}}</strong></p>
+        </div>
+        <button
+                class="text-red-600 hover:underline text-sm"
+                hx-post="/scenario/delete"
+                hx-vals='{"id": {{.ID}}}'
+                hx-target="#card-{{.ID}}"
+                hx-swap="outerHTML"
+                hx-confirm="Удалить сценарий?"
+        >
+            Удалить
+        </button>
+    </li>
+    {{end}}
+</ul>

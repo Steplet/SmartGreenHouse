@@ -1,0 +1,36 @@
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001" # Веб-интерфейс (опционально, для мониторинга)
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: always
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt:latest
+    container_name: zigbee2mqtt
+    depends_on:
+      - mosquitto
+    volumes:
+      - ./zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml
+      - ./zigbee2mqtt/data:/app/data
+    ports:
+      - "8081:8081" # Веб-интерфейс zigbee2mqtt
+    devices:
+      - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_bc386949e14eef11b37c4fb3174bec31-if00-port0:/dev/ttyACM0 # Замените на путь к вашему стику
+    environment:
+      - TZ=Europe/Moscow # Установите ваш часовой пояс
+      - MQTT_HOST=localhost
+      - MQTT_PORT=1883
+      - ZIGBEE2MQTT_DATA=/app/data
+    restart: always
+
+networks:
+  default:
+    name: zigbee2mqtt-network # Опционально, дайте сети имя

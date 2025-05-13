@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zigbee Devices Dashboard</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6 text-center">Zigbee Devices Dashboard</h1>
+
+    <div id="device-list"
+         hx-get="/devices"
+         hx-trigger="load, every 5s"
+         hx-swap="innerHTML"
+         class="space-y-4">
+        <p class="text-center text-gray-500">Loading devices...</p>
+    </div>
+</div>
+
+<div class="mb-6 text-center">
+    <button
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+            hx-post="/permit-join"
+            hx-swap="none">
+        Подключить новое устройство
+    </button>
+    <a href="/schedule-list">
+        <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+            Расписание
+        </button>
+    </a>
+    <a href="/scenario">
+        <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+            Сценарии
+        </button>
+    </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сценарии Zigbee</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white shadow rounded space-y-10">
+
+    <!-- Список сценариев -->
+    <section>
+        <h2 class="text-xl font-semibold mb-4">Сценарии</h2>
+        <div
+                id="scenarios-list"
+                hx-get="/scenario-list"
+                hx-trigger="load"
+                hx-target="#scenarios-list"
+                hx-swap="innerHTML"
+        >
+            <p class="text-gray-500">Загрузка сценариев...</p>
+        </div>
+    </section>
+    <a href="/scenario-form">
+        <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded">
+            Создать сценарий
+        </button>
+    </a>
+
+</div>
+</body>
+</html>

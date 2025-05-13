@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>График данных устройства</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="container mx-auto mt-8">
+    <h1 class="text-2xl font-bold mb-4">График данных для устройства</h1>
+    <!-- Контейнер для графика -->
+    <div class="relative">
+        <canvas id="dataChart"></canvas>
+    </div>
+    <!-- Кнопка для обновления данных -->
+    <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded" onclick="location.reload();">
+        Обновить данные
+    </button>
+    <button class="px-3 py-1 text-sm bg-green-500 text-white rounded" onclick="history.back();">Назад</button>
+</div>
+
+<script>
+    const datafromserver = {{.}};
+    // Функция для отрисовки графика
+    function drawChart(data) {
+        const ctx = document.getElementById('dataChart').getContext('2d');
+        const labels = data.map(item => item.time_mark);
+        const values = data.map(item => item.value);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Значения устройства',
+                    data: values,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+    }
+    drawChart(datafromserver)
+
+    // Обработка данных и отрисовка графика
+    document.addEventListener('htmx:afterSwap', function(event) {
+        const jsonData = JSON.parse(event.detail.xhr.responseText);
+        drawChart(jsonData);
+    });
+</script>
+</body>
+</html>

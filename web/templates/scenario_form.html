@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сценарии Zigbee</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white shadow rounded space-y-10">
+
+<form
+        id="scenarioForm"
+        hx-post="/scenario-create"
+        hx-target="#response"
+        class="space-y-4"
+>
+    <div>
+        <label class="block text-sm font-medium">Устройство</label>
+        <select name="device_ieeename" class="mt-1 block w-full border rounded p-2"
+                hx-get="/scenario/device" hx-trigger="change" hx-target="#device-fields" hx-swap="innerHTML" hx-include="" >
+            {{range .}}
+            <option value="{{.IEEEAddress}}">{{.FriendlyName}}</option>
+            {{end}}
+        </select>
+    </div>
+    <div id="device-fields">
+
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium">Целевое устройство</label>
+        <select name="action_device_ieeenmae" class="mt-1 block w-full border rounded p-2"
+                hx-get="/scenario/device-target" hx-trigger="change" hx-target="#device-fields-action" hx-swap="innerHTML" hx-include="" >
+            {{range .}}
+            <option value="{{.FriendlyName}}">{{.FriendlyName}}</option>
+            {{end}}
+        </select>
+    </div>
+    <div id="device-fields-action">
+
+    </div>
+    <div id="response" class="mt-4"></div>
+    <button
+            type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    >
+        Сохранить сценарий
+    </button>
+</form>
+
+</div>
+</body>
+</html>

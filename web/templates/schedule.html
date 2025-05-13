@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zigbee Devices Dashboard</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        var rawDevice = {{.}}
+
+
+        function parsRawDevice() {
+            var deviceMap = {}
+            let validExposes = []
+            rawDevice.forEach(function (device){
+                let deviceExposes = device["definition"]["exposes"];
+                validExposes = []
+                for (let keyExposes in deviceExposes){
+                    for (let exposesFiled in deviceExposes[keyExposes]){
+                        if (exposesFiled === "access" && deviceExposes[keyExposes][exposesFiled] === 3) {
+                            validExposes.push(deviceExposes[keyExposes])
+                        }
+                    }
+                }
+                deviceMap[device["friendly_name"]] = validExposes
+            })
+            return deviceMap
+        }
+
+        var deviceMap = parsRawDevice()
+
+        function updateMethods(deviceName) {
+            var methods = document.getElementById('command');
+            methods.innerHTML = ''; // Очистить список методов
+            console.log(deviceMap, deviceName)
+
+            var deviceMethods = deviceMap[deviceName];
+            console.log(deviceMethods)
+            if (deviceMethods === undefined) {
+                console.log("No methods")
+                var command_div = document.getElementById("command_div")
+                command_div.innerHTML = ''
+                return
+            }
+            deviceMethods.forEach(function(method) {
+                var option = document.createElement('option');
+                option.value = JSON.stringify(method);
+                option.textContent = method["name"];
+                methods.appendChild(option);
+            });
+            updateValuesForMethods(methods.value)
+        }
+
+        function updateValuesForMethods(rawMethod) {
+            var command_div = document.getElementById("command_div")
+            command_div.innerHTML = ''
+
+            const label = document.createElement('label')
+            label.textContent = "Methods data"
+            label.className = 'block text-sm font-medium text-gray-700'
+            command_div.appendChild(label)
+            let method = JSON.parse(rawMethod)
+            if (method === undefined) {
+                console.log("got undef")
+                command_div.innerHTML = 'No methods'
+                return
+            }
+            if (method["type"] === "numeric") {
+                // console.log("numeric",method)
+                const input = document.createElement('input');
+                input.name = 'command_data'
+                input.className = 'mt-1 block w-full border-2 border-gray-500 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
+                input.type = 'number';
+                input.min = method["value_min"]
+                input.max = method["value_max"]
+                input.step = method["value_step"]
+                command_div.appendChild(input)
+            }else if (method["type"] === "enum") {
+                const select = document.createElement('select')
+                select.className = 'mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500'
+                select.name = 'command_data'
+                method["values"].forEach(function (value) {
+                    const option = document.createElement('option')
+                    option.value = value.toString();
+                    option.textContent = value.toString();
+                    select.appendChild(option);
+                });
+                command_div.appendChild(select);
+                }
+
+        }
+
+        window.onload = function (){
+            // var command_div = document.getElementById("command_div")
+            // command_div.innerHTML = ''
+            const name = document.getElementById("device_ieee_name")
+            updateMethods(name.value)
+            const method = document.getElementById("command")
+            updateValuesForMethods(method.value)
+        };
+
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-semibold mb-4 text-center">Создать расписание</h1>
+
+    <form hx-post="/schedule" hx-target="#response" class="space-y-4">
+
+        <!-- Поле для выбора устройства -->
+        <div>
+            <label for="device_ieee_name" class="block text-sm font-medium text-gray-700">Устройство</label>
+            <select id="device_ieee_name" name="device_ieee_name" required onchange="updateMethods(this.value)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                {{range .}}
+                <option value="{{.IEEEAddress}}">{{.FriendlyName}}</option>
+                {{end}}
+            </select>
+        </div>
+
+        <!-- Поле для ввода команды -->
+        <div>
+            <label for="command" class="block text-sm font-medium text-gray-700">Команда</label>
+            <select id="command" name="command" required onchange="updateValuesForMethods(this.value)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <option value=""></option>
+            </select>
+            <div id="command_div">
+                Hellos
+            </div>
+<!--            <input type="text" id="command" name="command" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Введите команду">-->
+        </div>
+
+        <!-- Поле для выбора времени -->
+        <div>
+            <label for="schedule_time" class="block text-sm font-medium text-gray-700">Время выполнения</label>
+            <input type="datetime-local" id="schedule_time" name="schedule_time" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+
+        <!-- Кнопка отправки -->
+        <div>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Создать расписание
+            </button>
+        </div>
+    </form>
+
+    <!-- Место для вывода результата -->
+    <div id="response" class="mt-4"></div>
+    <button class="px-3 py-1 text-sm bg-green-500 text-white rounded" onclick="history.back();">Назад</button>
+</div>
+</body>
+</html>

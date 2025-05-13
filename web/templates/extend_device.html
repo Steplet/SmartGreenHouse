@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.FriendlyName}} — Zigbee Устройство</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+<div class="max-w-3xl mx-auto bg-white shadow rounded p-6">
+    <h1 class="text-2xl font-bold mb-4">{{.FriendlyName}}</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div>
+            <p class="text-sm text-gray-600">IEEE Address:</p>
+            <p class="text-md font-medium">{{.IEEEAddress}}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">Тип:</p>
+            <p class="text-md font-medium">{{.Type}}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">Производитель:</p>
+            <p class="text-md font-medium">{{.Manufacturer}}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-600">Модель:</p>
+            <p class="text-md font-medium">{{.ModelID}}</p>
+        </div>
+    </div>
+
+    <!-- Новый блок с данными -->
+    {{if .ExposesData}}
+    <h2 class="text-xl font-semibold mb-3">Текущие данные</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        {{range $key, $value := .ExposesData}}
+        <div class="bg-gray-50 border rounded p-3">
+            <p class="text-sm text-gray-600 font-medium">{{$key}}:</p>
+            <p class="text-md text-gray-800">
+                {{$value}}
+            </p>
+        </div>
+        {{end}}
+    </div>
+    {{else}}
+    <h2 class="text-xl font-semibold mb-3">Данные еще не опубликованы !</h2>
+    {{end}}
+
+    <h2 class="text-xl font-semibold mb-3">Exposes</h2>
+    <div class="space-y-4">
+        {{range .Definition.Exposes}}
+        <div class="border border-gray-200 rounded p-4 bg-gray-50">
+            <p class="font-semibold text-md mb-1">{{.Name}} <span class="text-gray-500 text-sm">({{.Type}})</span></p>
+            {{if .Property}}
+            <p class="text-sm text-gray-600">Property: <span class="font-medium text-gray-800">{{.Property}}</span></p>
+            {{end}}
+            {{if .Description}}
+            <p class="text-sm text-gray-600">Описание: <span class="italic">{{.Description}}</span></p>
+            {{end}}
+
+            {{if .Access}}
+            <p class="text-sm text-gray-600">Access: <span class="text-gray-800">{{.Access}}</span></p>
+            {{if eq .Access 3}}
+                {{if eq .Type "enum"}}
+                    <h3 class="text-xl font-semibold mb-3">Enum Values:</h3>
+                    {{range .Values}}
+                        <p class="text-gray-1000">{{.}}</p>
+                    {{end}}
+                {{else}}
+                    <p class="text-sm text-gray-600">Min Value: <span class="text-gray-800">{{.ValueMin}}</span></p>
+                    <p class="text-sm text-gray-600">Max Value: <span class="text-gray-800">{{.ValueMax}}</span></p>
+                    <p class="text-sm text-gray-600">Step Value: <span class="text-gray-800">{{.ValueStep}}</span></p>
+                {{end}}
+                <form hx-post="/devices/{{$.FriendlyName}}/{{.Property}}" hx-swap="none" class="flex space-x-2">
+                <input name="value" type="text" class="border px-2 py-1 text-sm rounded" placeholder="Введите значение">
+                <button type="submit" class="px-3 py-1 text-sm bg-green-500 text-white rounded">Установить данные</button>
+                </form>
+
+            {{end}}
+            <a href="/devices/{{$.IEEEAddress}}/chart/{{.Name}}">
+                <button class="px-3 py-1 text-sm bg-green-500 text-white rounded">
+                    График
+                </button>
+            </a>
+        </div>
+        {{end}}
+        {{end}}
+    </div>
+    <button class="px-3 py-1 text-sm bg-green-500 text-white rounded" onclick="history.back();">Назад</button>
+</div>
+</body>
+</html>
