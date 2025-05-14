@@ -1,0 +1,240 @@
+[
+  {
+    "disabled":false,
+    "endpoints":{
+      "1":{
+        "bindings":[
+
+        ],
+        "clusters":{
+          "input":[
+            "genBasic",
+            "genIdentify",
+            "genOnOff",
+            "genTime",
+            "genOta",
+            "26",
+            "lightingColorCtrl"
+          ],
+          "output":[
+            "genBasic",
+            "genIdentify",
+            "genGroups",
+            "genScenes",
+            "genOnOff",
+            "genLevelCtrl",
+            "genPollCtrl",
+            "lightingColorCtrl",
+            "msIlluminanceMeasurement",
+            "msTemperatureMeasurement",
+            "msRelativeHumidity",
+            "msOccupancySensing",
+            "ssIasZone",
+            "haMeterIdentification",
+            "haApplianceStatistics",
+            "haElectricalMeasurement",
+            "seMetering",
+            "touchlink",
+            "manuSpecificLegrandDevices",
+            "manuSpecificSamsungAccelerometer"
+          ]
+        },
+        "configured_reportings":[
+
+        ],
+        "scenes":[
+
+        ]
+      },
+      "242":{
+        "bindings":[
+
+        ],
+        "clusters":{
+          "input":[
+
+          ],
+          "output":[
+            "greenPower"
+          ]
+        },
+        "configured_reportings":[
+
+        ],
+        "scenes":[
+
+        ]
+      }
+    },
+    "friendly_name":"Coordinator",
+    "ieee_address":"0x08b95ffffe6bf028",
+    "interview_completed":true,
+    "interviewing":false,
+    "network_address":0,
+    "supported":true,
+    "type":"Coordinator"
+  },
+  {
+    "definition":{
+      "description":"Temperature and humidity sensor",
+      "exposes":[
+        {
+          "access":1,
+          "description":"Measured temperature value",
+          "label":"Temperature",
+          "name":"temperature",
+          "property":"temperature",
+          "type":"numeric",
+          "unit":"°C"
+        },
+        {
+          "access":1,
+          "description":"Measured relative humidity",
+          "label":"Humidity",
+          "name":"humidity",
+          "property":"humidity",
+          "type":"numeric",
+          "unit":"%"
+        },
+        {
+          "access":3,
+          "description":"Temperature unit",
+          "label":"Temperature unit",
+          "name":"temperature_unit",
+          "property":"temperature_unit",
+          "type":"enum",
+          "values":[
+            "celsius",
+            "fahrenheit"
+          ]
+        },
+        {
+          "access":3,
+          "description":"Temperature calibration",
+          "label":"Temperature calibration",
+          "name":"temperature_calibration",
+          "property":"temperature_calibration",
+          "type":"numeric",
+          "unit":"°C",
+          "value_max":2,
+          "value_min":-2,
+          "value_step":0.1
+        },
+        {
+          "access":3,
+          "description":"Humidity calibration",
+          "label":"Humidity calibration",
+          "name":"humidity_calibration",
+          "property":"humidity_calibration",
+          "type":"numeric",
+          "unit":"%",
+          "value_max":30,
+          "value_min":-30,
+          "value_step":1
+        },
+        {
+          "access":1,
+          "category":"diagnostic",
+          "description":"Remaining battery in %, can take up to 24 hours before reported",
+          "label":"Battery",
+          "name":"battery",
+          "property":"battery",
+          "type":"numeric",
+          "unit":"%",
+          "value_max":100,
+          "value_min":0
+        },
+        {
+          "access":1,
+          "category":"diagnostic",
+          "description":"Link quality (signal strength)",
+          "label":"Linkquality",
+          "name":"linkquality",
+          "property":"linkquality",
+          "type":"numeric",
+          "unit":"lqi",
+          "value_max":255,
+          "value_min":0
+        }
+      ],
+      "model":"KOJIMA-THS-ZG-LCD",
+      "options":[
+        {
+          "access":2,
+          "description":"Calibrates the temperature value (absolute offset), takes into effect on next report of device.",
+          "label":"Temperature calibration",
+          "name":"temperature_calibration",
+          "property":"temperature_calibration",
+          "type":"numeric"
+        },
+        {
+          "access":2,
+          "description":"Number of digits after decimal point for temperature, takes into effect on next report of device. This option can only decrease the precision, not increase it.",
+          "label":"Temperature precision",
+          "name":"temperature_precision",
+          "property":"temperature_precision",
+          "type":"numeric",
+          "value_max":3,
+          "value_min":0
+        },
+        {
+          "access":2,
+          "description":"Calibrates the humidity value (absolute offset), takes into effect on next report of device.",
+          "label":"Humidity calibration",
+          "name":"humidity_calibration",
+          "property":"humidity_calibration",
+          "type":"numeric"
+        },
+        {
+          "access":2,
+          "description":"Number of digits after decimal point for humidity, takes into effect on next report of device. This option can only decrease the precision, not increase it.",
+          "label":"Humidity precision",
+          "name":"humidity_precision",
+          "property":"humidity_precision",
+          "type":"numeric",
+          "value_max":3,
+          "value_min":0
+        }
+      ],
+      "supports_ota":false,
+      "vendor":"KOJIMA"
+    },
+    "disabled":false,
+    "endpoints":{
+      "1":{
+        "bindings":[
+
+        ],
+        "clusters":{
+          "input":[
+            "genBasic",
+            "genIdentify",
+            "msTemperatureMeasurement",
+            "msRelativeHumidity",
+            "genPowerCfg"
+          ],
+          "output":[
+            "genIdentify"
+          ]
+        },
+        "configured_reportings":[
+
+        ],
+        "scenes":[
+
+        ]
+      }
+    },
+    "friendly_name":"0xa4c13825a5855f1b",
+    "ieee_address":"0xa4c13825a5855f1b",
+    "interview_completed":true,
+    "interviewing":false,
+    "manufacturer":"_TZE200_dikkika5",
+    "model_id":"TS0601",
+    "network_address":40464,
+    "power_source":"Battery",
+    "software_build_id":"0122052017",
+    "supported":true,
+    "type":"EndDevice"
+  }
+]
